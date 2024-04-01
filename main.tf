@@ -7,6 +7,14 @@ resource "aws_vpc" "main" {
 # Define ECS cluster
 resource "aws_ecs_cluster" "medusa_cluster" {
   name = var.ecs_cluster_name
+  capacity_providers  = ["FARGATE"]
+  default_capacity_provider_strategy {
+      capacity_provider {
+        name = "FARGATE"
+        weight = 5
+        base = 5
+      }
+  }
 }
 
 # Define ECS task definition
@@ -25,6 +33,13 @@ resource "aws_ecs_service" "medusa_service" {
   cluster         = aws_ecs_cluster.medusa_cluster.id
   task_definition = aws_ecs_task_definition.medusa_task.arn
   desired_count   = var.ecs_service_desired_count
+
+  capacity_provider_strategy {
+    capacity_provider {
+      name = "FARGATE"
+      weight = 5
+      base = 5
+    }
 
   network_configuration {
     subnets          = var.ecs_service_subnets
