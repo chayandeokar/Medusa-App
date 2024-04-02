@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "medusa-terraform-state"
+    bucket = "medusa-terraform-states"
     key    = "terraform"
     region = "ap-south-1"
   }
